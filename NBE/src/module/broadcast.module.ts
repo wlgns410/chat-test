@@ -1,9 +1,9 @@
-import { Broadcast } from './../infrastructure/broadcast/entity/broadcast.entity';
+import { BroadcastEntity } from './../infrastructure/broadcast/entity/broadcast.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Broadcast])],
+  imports: [TypeOrmModule.forFeature([BroadcastEntity])],
   controllers: [],
   providers: [],
   exports: [],

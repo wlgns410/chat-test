@@ -1,20 +1,20 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
-import { User } from '../../user/entity/user.entity';
-import { Broadcast } from '../../broadcast/entity/broadcast.entity';
+import { UserEntity } from '../../user/entity/user.entity';
+import { BroadcastEntity } from '../../broadcast/entity/broadcast.entity';
 
 @Entity()
-export class Chat {
+export class ChatEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, { nullable: false })
-  user: User;
+  @ManyToOne(() => UserEntity, { nullable: false })
+  user: UserEntity;
 
   @Column({ name: 'user_id' })
   userId: number;
 
-  @ManyToOne(() => Broadcast, { nullable: false })
-  broadcast: Broadcast;
+  @ManyToOne(() => BroadcastEntity, { nullable: false })
+  broadcast: BroadcastEntity;
 
   @Column({ name: 'broadcast_id' })
   broadcastId: number;
