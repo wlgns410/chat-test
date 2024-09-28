@@ -9,7 +9,7 @@ import { UserRepositoryImpl } from '../infrastructure/user/repository/user.repos
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
   controllers: [UserController],
-  providers: [UserService, { provide: UserRepositorySymbol, useClass: UserRepositoryImpl }],
+  providers: [UserService, { provide: 'UserRepository', useClass: UserRepositoryImpl }],
   exports: [UserService],
 })
 export class UserModule {}

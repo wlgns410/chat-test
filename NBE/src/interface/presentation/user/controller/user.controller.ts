@@ -6,6 +6,7 @@ import { UpdateUserUseCase } from '../../../../application/user/use-case/update-
 import { UserDomain } from '../../../../domain/user/model/user.domain';
 import { Nullable } from '../../../../common/type/native';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { LoginUserDto } from '../dto/request/login.request';
 
 @ApiTags('users')
 @Controller('users')
@@ -38,8 +39,8 @@ export class UserController {
   @ApiOperation({ summary: '로그인' }) // API 설명 추가
   @ApiResponse({ status: 200, description: '로그인 성공' })
   @Post('login')
-  async loginUser(@Body('email') email: string, @Body('password') password: string): Promise<{ token: string | null }> {
-    const token = await this.loginUserUseCase.execute(email, password);
+  async loginUser(@Body() loginData: LoginUserDto): Promise<{ token: string | null }> {
+    const token = await this.loginUserUseCase.execute(loginData.email, loginData.password);
     return { token };
   }
 

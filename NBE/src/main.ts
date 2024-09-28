@@ -10,7 +10,6 @@ async function bootstrap() {
   // Swagger 설정 로드
   const swaggerDocument = JSON.parse(readFileSync(join(__dirname, '../swagger.json'), 'utf8'));
 
-  // Swagger 적용
   SwaggerModule.setup('api', app, swaggerDocument);
 
   await app.listen(3000);
