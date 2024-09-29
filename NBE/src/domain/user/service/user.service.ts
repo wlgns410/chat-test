@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { UserRepository } from '../interface/user.repository';
+import { Inject, Injectable } from '@nestjs/common';
+import { UserRepository, UserRepositorySymbol } from '../interface/user.repository';
 import { UserDomain } from '../model/user.domain';
 import { Nullable } from 'src/common/type/native';
 
 @Injectable()
 export class UserService {
   constructor(
+    @Inject(UserRepositorySymbol)
     private readonly userRepository: UserRepository, // UserRepository 의존성 주입
   ) {}
 
