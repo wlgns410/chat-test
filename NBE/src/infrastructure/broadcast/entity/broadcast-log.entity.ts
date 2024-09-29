@@ -1,22 +1,22 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { Broadcast } from './broadcast.entity';
-import { User } from '../../user/entity/user.entity';
+import { BroadcastEntity } from './broadcast.entity';
+import { UserEntity } from '../../user/entity/user.entity';
 
 @Entity()
 export class BroadcastLog {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Broadcast, { nullable: true, onDelete: 'SET NULL' })
+  @ManyToOne(() => BroadcastEntity, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'broadcast_id' })
-  broadcast: Broadcast;
+  broadcast: BroadcastEntity;
 
   @Column({ name: 'broadcast_id' })
   broadcastId: number;
 
-  @ManyToOne(() => User, { nullable: true, onDelete: 'SET NULL' })
+  @ManyToOne(() => UserEntity, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn()
-  user: User;
+  user: UserEntity;
 
   @Column({ name: 'user_id' })
   userId: number;

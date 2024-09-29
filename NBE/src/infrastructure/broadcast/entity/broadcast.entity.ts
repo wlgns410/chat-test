@@ -1,14 +1,14 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, JoinColumn } from 'typeorm';
-import { User } from '../../user/entity/user.entity';
+import { UserEntity } from '../../user/entity/user.entity';
 
 @Entity()
-export class Broadcast {
+export class BroadcastEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => User, user => user.broadcast, { nullable: false })
+  @OneToOne(() => UserEntity, user => user.broadcast, { nullable: false })
   @JoinColumn()
-  user: User;
+  user: UserEntity;
 
   @Column({ name: 'user_id' })
   userId: number;

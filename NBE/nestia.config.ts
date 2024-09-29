@@ -5,6 +5,11 @@ const NESTIA_CONFIG: INestiaConfig = {
   swagger: {
     output: './swagger.json',
     beautify: true,
+    info: {
+      title: 'Broadcast Project API',
+      description: 'broadcast project API description',
+      version: '0.0.1',
+    },
     security: {
       bearer: {
         type: 'apiKey',

@@ -1,8 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { Broadcast } from '../../broadcast/entity/broadcast.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { BroadcastEntity } from '../../broadcast/entity/broadcast.entity';
 
 @Entity()
-export class User {
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -15,8 +15,8 @@ export class User {
   @Column({ length: 255 })
   password: string;
 
-  @OneToOne(() => Broadcast, broadcast => broadcast.user, { nullable: true })
-  broadcast: Broadcast;
+  @OneToOne(() => BroadcastEntity, broadcast => broadcast.user, { nullable: true })
+  broadcast: BroadcastEntity;
 
   @Column({ name: 'broadcast_id' })
   broadcastId: number;
