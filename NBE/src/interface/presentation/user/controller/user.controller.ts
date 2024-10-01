@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Patch, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Param, Body, UseGuards } from '@nestjs/common';
 import { UserService } from '../../../../domain/user/service/user.service';
 import { UserDomain } from '../../../../domain/user/model/user.domain';
 import { Nullable } from '../../../../common/type/native';
+import { AuthGuard } from '../../../../common/guard/auth.guard';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { LoginUserDto } from '../dto/request/login.request';
 
@@ -16,6 +17,7 @@ export class UserController {
   @ApiOperation({ summary: '사용자 조회' })
   @ApiResponse({ status: 200, description: '사용자 정보 조회 성공' })
   @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @Get(':id')
   async getUserById(@Param('id') id: number): Promise<Nullable<UserDomain>> {
     return await this.userService.findUserById(id);
@@ -42,6 +44,7 @@ export class UserController {
   @ApiOperation({ summary: '사용자 정보 업데이트' })
   @ApiResponse({ status: 200, description: '사용자 정보 업데이트 성공' })
   @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @Patch(':id')
   async updateUser(@Param('id') id: number, @Body() userData: UserDomain): Promise<UserDomain> {
     return await this.userService.updateUser(userData);

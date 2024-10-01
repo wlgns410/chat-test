@@ -4,14 +4,15 @@ import { UserModule } from './user.module';
 import { BroadcastModule } from './broadcast.module';
 import { ChatModule } from './chat.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeORMConfig } from 'src/config/typeorm.config';
+import { TypeORMConfig } from '../config/typeorm.config';
 import { LoggerModule } from './logger.module';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
-import { ApiExceptionFilter } from 'src/common/filter/api-exception.filter';
-import { ApiResponseInterceptor } from 'src/common/interceptor/api.interceptor';
+import { ApiExceptionFilter } from '../common/filter/api-exception.filter';
+import { ApiResponseInterceptor } from '../common/interceptor/api.interceptor';
+import { AuthModule } from './auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(TypeORMConfig), ConfigModule.forRoot({ isGlobal: true }), UserModule, BroadcastModule, ChatModule, LoggerModule],
+  imports: [TypeOrmModule.forRoot(TypeORMConfig), ConfigModule.forRoot({ isGlobal: true }), UserModule, AuthModule, BroadcastModule, ChatModule, LoggerModule],
   controllers: [],
   providers: [
     {
