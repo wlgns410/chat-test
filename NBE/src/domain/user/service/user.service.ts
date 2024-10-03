@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { UserRepository, UserRepositorySymbol } from '../interface/user.repository';
 import { UserDomain } from '../model/user.domain';
-import { Nullable } from 'src/common/type/native';
+import { Nullable } from '../../../common/type/native';
 import * as bcrypt from 'bcrypt';
-import { CustomException } from 'src/common/exception/custom.exception';
-import { ErrorCode } from 'src/common/enum/error-code.enum';
+import { CustomException } from '../../../common/exception/custom.exception';
+import { ErrorCode } from '../../../common/enum/error-code.enum';
 
 @Injectable()
 export class UserService {

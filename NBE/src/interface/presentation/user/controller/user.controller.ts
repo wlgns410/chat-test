@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Param, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, UseGuards } from '@nestjs/common';
 import { UserService } from '../../../../domain/user/service/user.service';
 import { UserDomain } from '../../../../domain/user/model/user.domain';
 import { Nullable } from '../../../../common/type/native';
@@ -6,8 +6,8 @@ import { AuthGuard } from '../../../../common/guard/auth.guard';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { LoginUserDto } from '../dto/request/login.request';
 import { UserResponseDto } from '../dto/response/user.response';
-import { CustomException } from 'src/common/exception/custom.exception';
-import { ErrorCode } from 'src/common/enum/error-code.enum';
+import { CustomException } from '../../../../common/exception/custom.exception';
+import { ErrorCode } from '../../../../common/enum/error-code.enum';
 
 @ApiTags('users')
 @Controller('users')
