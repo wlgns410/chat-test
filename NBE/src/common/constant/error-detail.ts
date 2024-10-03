@@ -35,4 +35,8 @@ export const ERROR_DETAIL: Record<ErrorCode, ErrorDetail> = {
     message: '핸들링 하지 못한 에러입니다.',
     statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
   },
+  [ErrorCode.NOT_FOUND]: {
+    message: '존재하지 않는 데이터입니다.',
+    statusCode: HttpStatus.NOT_FOUND,
+  },
 };

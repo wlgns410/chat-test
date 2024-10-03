@@ -18,7 +18,7 @@ export class UserEntity {
   @OneToOne(() => BroadcastEntity, broadcast => broadcast.user, { nullable: true })
   broadcast: BroadcastEntity;
 
-  @Column({ name: 'broadcast_id' })
+  @Column({ name: 'broadcast_id', nullable: true })
   broadcastId: number;
 
   @CreateDateColumn()
@@ -34,6 +34,7 @@ export class UserEntity {
     type: 'enum',
     enum: ['active', 'inactive'],
     default: 'inactive',
+    nullable: true,
   })
   status: string;
 
@@ -41,6 +42,7 @@ export class UserEntity {
     type: 'enum',
     enum: ['viewer', 'host', 'admin'],
     default: 'viewer',
+    nullable: true,
   })
   role: string;
 }

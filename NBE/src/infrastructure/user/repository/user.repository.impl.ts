@@ -37,24 +37,4 @@ export class UserRepositoryImpl implements UserRepository {
     // 저장 후 반환된 엔티티를 다시 도메인 객체로 변환
     return UserMapper.toDomain(entity);
   }
-
-  // 비밀번호 변경과 같은 부분 업데이트 처리
-  async update(userDomain: UserDomain): Promise<UserDomain> {
-    // 도메인에서 ID를 추출하여 해당 엔티티를 조회
-    const entity = await this.userRepository.findOne({ where: { id: userDomain.id } });
-
-    // 엔티티가 존재하지 않을 경우 처리
-    if (!entity) {
-      throw new Error('User not found');
-    }
-
-    // 부분 업데이트를 처리할 매퍼 메서드 호출
-    const updatedEntity = await UserMapper.toPartialEntity(userDomain, entity);
-
-    // 업데이트된 엔티티 저장
-    const savedEntity = await this.userRepository.save(updatedEntity);
-
-    // 저장된 엔티티를 다시 도메인 객체로 변환하여 반환
-    return UserMapper.toDomain(savedEntity);
-  }
 }
