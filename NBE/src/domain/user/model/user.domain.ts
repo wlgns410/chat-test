@@ -11,8 +11,8 @@ export class UserDomain {
   ) {}
 
   // 비밀번호를 반환하지 않는 도메인 생성 메서드
-  static toLogin(id: number, username: string, email: string, status: string, role: string): UserDomain {
-    return new UserDomain(id, username, email, status, role);
+  static toLogin(id: number, username: string, email: string, status: string, role: string, password: string): UserDomain {
+    return new UserDomain(id, username, email, status, role, password);
   }
 
   issueToken(): string {

@@ -5,6 +5,9 @@ import { Nullable } from '../../../../common/type/native';
 import { AuthGuard } from '../../../../common/guard/auth.guard';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { LoginUserDto } from '../dto/request/login.request';
+import { UserResponseDto } from '../dto/response/user.response';
+import { CustomException } from 'src/common/exception/custom.exception';
+import { ErrorCode } from 'src/common/enum/error-code.enum';
 
 @ApiTags('users')
 @Controller('users')
@@ -19,8 +22,14 @@ export class UserController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Get(':id')
-  async getUserById(@Param('id') id: number): Promise<Nullable<UserDomain>> {
-    return await this.userService.findUserById(id);
+  async getUserById(@Param('id') id: number): Promise<Nullable<UserResponseDto>> {
+    const user = await this.userService.findUserById(id);
+
+    if (!user) {
+      throw new CustomException(ErrorCode.NOT_FOUND);
+    }
+
+    return new UserResponseDto(user); // 비밀번호를 제외한 정보만 반환
   }
 
   // 회원가입
@@ -38,15 +47,5 @@ export class UserController {
   async loginUser(@Body() loginData: LoginUserDto): Promise<{ token: string | null }> {
     const token = await this.userService.loginUser(loginData.email, loginData.password);
     return { token };
-  }
-
-  // 사용자 정보 업데이트
-  @ApiOperation({ summary: '사용자 정보 업데이트' })
-  @ApiResponse({ status: 200, description: '사용자 정보 업데이트 성공' })
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard)
-  @Patch(':id')
-  async updateUser(@Param('id') id: number, @Body() userData: UserDomain): Promise<UserDomain> {
-    return await this.userService.updateUser(userData);
   }
 }

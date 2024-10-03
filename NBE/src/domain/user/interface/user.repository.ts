@@ -7,5 +7,4 @@ export interface UserRepository {
   findOneById(id: number): Promise<Nullable<UserDomain>>;
   findOneByEmail(email: string): Promise<Nullable<UserDomain>>;
   save(userDomain: UserDomain): Promise<UserDomain>;
-  update(userDomain: UserDomain): Promise<UserDomain>;
 }

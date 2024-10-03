@@ -27,6 +27,6 @@ export class UserMapper {
   }
 
   static toDomain(entity: UserEntity): UserDomain {
-    return UserDomain.toLogin(entity.id, entity.username, entity.email, entity.status, entity.role);
+    return UserDomain.toLogin(entity.id, entity.username, entity.email, entity.status, entity.role, entity.password);
   }
 }
