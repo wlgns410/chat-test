@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { CustomException } from '../../../common/exception/custom.exception';
 import { ErrorCode } from '../../../common/enum/error-code.enum';
 
+
 @Injectable()
 export class UserService {
   constructor(
@@ -41,6 +42,7 @@ export class UserService {
       }
     } else {
       throw new CustomException(ErrorCode.NOT_FOUND);
+
     }
 
     // 비밀번호 불일치 시 null 반환

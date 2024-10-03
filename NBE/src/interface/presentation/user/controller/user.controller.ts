@@ -9,6 +9,7 @@ import { UserResponseDto } from '../dto/response/user.response';
 import { CustomException } from '../../../../common/exception/custom.exception';
 import { ErrorCode } from '../../../../common/enum/error-code.enum';
 
+
 @ApiTags('users')
 @Controller('users')
 export class UserController {
@@ -30,6 +31,7 @@ export class UserController {
     }
 
     return new UserResponseDto(user); // 비밀번호를 제외한 정보만 반환
+
   }
 
   // 회원가입
