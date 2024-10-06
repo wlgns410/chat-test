@@ -6,7 +6,7 @@ export class ChatGateway implements OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
-  // 유저가 채팅방에 참여하는 이벤트 처리
+  // 유저가 채팅방에 참여하는 이벤트 처리 -> room join 대신 redis에 메시지 적재시키고 이를 kafka로 전달하는 방식으로?
   @SubscribeMessage('join')
   handleJoin(@MessageBody() roomId: string, @ConnectedSocket() client: Socket): void {
     client.join(roomId);
