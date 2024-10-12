@@ -17,9 +17,11 @@ export class ChatRepositoryImpl implements ChatRepositoy {
 
   // chat을 create하는 메서드
   async createChat(chatDomain: ChatDomain): Promise<ChatDomain> {
+    console.log('here repo');
     const chatEntity = ChatMapper.toChatEntity(chatDomain);
+    console.log('here chatEntity', chatEntity);
     const savedEntity = await this.chatRepository.save(chatEntity);
-
+    console.log('here savedEntity', savedEntity);
     // ChatEntity -> ChatDomain 변환 후 반환
     return ChatMapper.toDomain(savedEntity);
   }

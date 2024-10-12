@@ -14,6 +14,7 @@ export class ChatService {
 
   // 새로운 채팅 생성
   async createChat(chatDomain: ChatDomain): Promise<Nullable<ChatDomain>> {
+    console.log('here service');
     return await this.chatRepository.createChat(chatDomain);
   }
 
