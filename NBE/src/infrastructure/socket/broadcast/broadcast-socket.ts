@@ -9,6 +9,7 @@ export class BroadcastGateway {
   // 방송 시작
   @SubscribeMessage('startBroadcast')
   handleStartBroadcast(@MessageBody() broadcastId: string, @ConnectedSocket() client: Socket): void {
+    console.log(`Client ${client.id} joined broadcast ${broadcastId}`);
     client.join(broadcastId); // 클라이언트를 방송 방에 추가
     this.server.to(broadcastId).emit('broadcastMessage', `Broadcast ${broadcastId} has started`); // 방송 시작 알림
   }
@@ -16,6 +17,7 @@ export class BroadcastGateway {
   // 방송 상태 업데이트 (예: 방송 중 상태 업데이트)
   @SubscribeMessage('updateBroadcast')
   handleUpdateBroadcast(@MessageBody() { broadcastId, status }: { broadcastId: string; status: string }): void {
+    console.log(`Message from ${broadcastId} to broadcast`);
     this.server.to(broadcastId).emit('broadcastStatus', `Broadcast ${broadcastId} status: ${status}`); // 방송 상태 업데이트 알림
   }
 

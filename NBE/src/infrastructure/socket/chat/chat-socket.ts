@@ -32,6 +32,7 @@ export class ChatGateway implements OnGatewayDisconnect {
   @SubscribeMessage('join')
   handleJoin(@MessageBody() broadcastId: string, @ConnectedSocket() client: Socket): void {
     const user = client.data.user; // 인증된 유저 정보 사용
+    console.log('socket is working? : ', client.id);
     if (user) {
       client.join(broadcastId);
       this.server.to(broadcastId).emit('message', `${user.username} joined the chat`); // 방에 있는 다른 사용자에게 알림

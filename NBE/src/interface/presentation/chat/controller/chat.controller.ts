@@ -19,7 +19,6 @@ export class ChatController {
   @UseGuards(AuthGuard)
   @Post()
   async createChat(@Body() chatDomain: ChatDomain): Promise<Nullable<ChatDomain>> {
-    console.log('here');
     return await this.chatService.createChat(chatDomain);
   }
 

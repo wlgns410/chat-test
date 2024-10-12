@@ -49,9 +49,6 @@ describe('ChatController (e2e)', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .query({ page: 1, take: 10 });
 
-    console.log(response.body);
-    console.log(response.body.data);
-
     expect(response.status).toBe(200);
     expect(response.body.data.data.length).toBeLessThanOrEqual(10); // 최대 10개의 채팅만 반환
   });
