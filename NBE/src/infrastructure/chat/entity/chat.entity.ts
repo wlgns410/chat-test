@@ -8,15 +8,17 @@ export class ChatEntity {
   id: number;
 
   @ManyToOne(() => UserEntity, { nullable: false })
+  @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
-  @Column({ name: 'user_id' })
+  @Column()
   userId: number;
 
   @ManyToOne(() => BroadcastEntity, { nullable: false })
+  @JoinColumn({ name: 'broadcast_id' })
   broadcast: BroadcastEntity;
 
-  @Column({ name: 'broadcast_id' })
+  @Column()
   broadcastId: number;
 
   @Column({ type: 'text' })

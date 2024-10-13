@@ -1,6 +1,9 @@
 {
   "dependencies": {
+    "@nestjs/platform-socket.io": "^10.4.4",
+    "@nestjs/websockets": "^10.4.4",
     "bcrypt": "^5.1.1",
+    "dayjs": "^1.11.13",
     "nest-winston": "^1.9.7",
     "winston-daily-rotate-file": "^5.0.0"
   },
