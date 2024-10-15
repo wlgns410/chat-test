@@ -39,4 +39,8 @@ export const ERROR_DETAIL: Record<ErrorCode, ErrorDetail> = {
     message: '존재하지 않는 데이터입니다.',
     statusCode: HttpStatus.NOT_FOUND,
   },
+  [ErrorCode.NOT_EXISTED_BUCKET]: {
+    message: '버킷이 존재하지 않습니다.',
+    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+  },
 };
