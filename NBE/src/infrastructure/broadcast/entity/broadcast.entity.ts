@@ -19,22 +19,22 @@ export class BroadcastEntity {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @CreateDateColumn({ type: 'timestamptz' })
-  startTime: Date;
-
-  @Column({ type: 'timestamptz', nullable: true })
-  endTime: Date;
-
   @Column({
     type: 'enum',
-    enum: ['live', 'finished'],
-    default: 'live',
+    enum: ['scheduled', 'live', 'off_air'],
+    default: 'off_air',
   })
   status: string;
 
-  @Column({ type: 'bigint', default: 0 })
-  viewerCount: number;
+  @Column({ type: 'bigint', default: 1 })
+  viewerCount: number; // 방송하는 사람 있으니 기본값 1
 
-  @Column({ type: 'boolean', default: false })
-  isDeleted: boolean; // 논리적 삭제 플래그
+  @Column({ type: 'timestamptz', nullable: true })
+  scheduledTime: Date; // 방송 예정시간
+
+  @Column({ type: 'simple-array', nullable: true })
+  tags: string[]; // 태그를 여러개 작성할 수 있도록
+
+  @Column({ type: 'text', nullable: true })
+  thumbnailUrl: string; // 방송 썸네일
 }

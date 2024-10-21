@@ -33,9 +33,9 @@ export class BroadcastLog {
   @Column({ type: 'timestamptz', nullable: true })
   endTime: Date;
 
-  @Column({ type: 'int' })
-  viewerCount: number;
+  @Column({ type: 'int', default: 0 })
+  allViewerCount: number;
 
   @CreateDateColumn({ type: 'timestamptz' })
-  logCreatedAt: Date; // 로그 생성 시간
+  createdAt: Date; // 로그 생성 시간
 }
