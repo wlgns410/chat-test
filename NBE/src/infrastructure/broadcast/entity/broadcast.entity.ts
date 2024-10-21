@@ -7,10 +7,10 @@ export class BroadcastEntity {
   id: number;
 
   @OneToOne(() => UserEntity, user => user.broadcast, { nullable: false })
-  @JoinColumn()
+  @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
-  @Column({ name: 'user_id' })
+  @Column()
   userId: number;
 
   @Column({ length: 255 })

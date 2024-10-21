@@ -11,14 +11,14 @@ export class BroadcastLog {
   @JoinColumn({ name: 'broadcast_id' })
   broadcast: BroadcastEntity;
 
-  @Column({ name: 'broadcast_id' })
+  @Column()
   broadcastId: number;
 
   @ManyToOne(() => UserEntity, { nullable: true, onDelete: 'SET NULL' })
-  @JoinColumn()
+  @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
-  @Column({ name: 'user_id' })
+  @Column()
   userId: number;
 
   @Column({ length: 255 })
