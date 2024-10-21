@@ -43,4 +43,12 @@ export const ERROR_DETAIL: Record<ErrorCode, ErrorDetail> = {
     message: '버킷이 존재하지 않습니다.',
     statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
   },
+  [ErrorCode.NOT_PROCESSING_STREAM_DATA]: {
+    message: '스트림 데이터 처리에 문제가 발생했습니다.',
+    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+  },
+  [ErrorCode.UNHANDLED_STREAM]: {
+    message: '예상치 못한 스트림 데이터 핸들링 문제가 발생했습니다.',
+    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+  },
 };

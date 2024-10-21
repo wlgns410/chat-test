@@ -1,6 +1,8 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { MinioConnector } from './connector';
+import { ErrorCode } from '../enum/error-code.enum';
+import { CustomException } from '../exception/custom.exception';
 
 @Injectable()
 export class StreamMiddleware implements NestMiddleware {
@@ -23,7 +25,7 @@ export class StreamMiddleware implements NestMiddleware {
         const filePath = `stream-data-${Date.now()}.mp4`;
 
         // 데이터를 MinIO에 저장
-        await this.minioConnector.uploadFile('your-bucket', filePath, buffer);
+        await this.minioConnector.uploadFile('broadcast', filePath, buffer);
 
         console.log('Stream data saved successfully.');
 
@@ -31,14 +33,14 @@ export class StreamMiddleware implements NestMiddleware {
         next();
       } catch (err) {
         console.error('Error saving stream data:', err);
-        res.status(500).send('Error processing stream data');
+        throw new CustomException(ErrorCode.NOT_PROCESSING_STREAM_DATA);
       }
     });
 
     // 에러 핸들링
     req.on('error', err => {
       console.error('Stream error:', err);
-      res.status(500).send('Stream error');
+      throw new CustomException(ErrorCode.UNHANDLED_STREAM);
     });
   }
 }

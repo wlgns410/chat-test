@@ -28,7 +28,7 @@ export class MinioConnector {
   async getFile(bucket: string, filePath: string) {
     const bucketExists = await this.minioClient.bucketExists(bucket);
     if (!bucketExists) {
-      throw new Error('Bucket does not exist');
+      throw new CustomException(ErrorCode.NOT_EXISTED_BUCKET);
     }
 
     return this.minioClient.getObject(bucket, filePath);
