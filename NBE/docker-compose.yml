@@ -12,6 +12,17 @@ services:
       - postgres:/var/lib/postgresql/data
     ports:
       - '5432:5432'
-
+  minio:
+    image: minio/minio # 파일 인코딩은 기본 UTF-8로 설정되어 있음
+    ports:
+      - '9000:9000' # 파일 업로드/다운로드 및 S3 API 요청 처리 포트
+      - '9001:9001' # 관리 Console 포트(사용자 관리, 버킷 관리, 설정)
+    environment:
+      MINIO_ROOT_USER: minioadmin # 기본 사용자
+      MINIO_ROOT_PASSWORD: minioadmin # 기본 비밀번호
+    command: server /data --console-address ":9001" # /data 경로를 저장소 디렉토리로 설정하고, 관리 콘솔을 9001 포트에서 염
+    volumes:
+      - minio_data:/data
 volumes:
   postgres:
+  minio_data:
