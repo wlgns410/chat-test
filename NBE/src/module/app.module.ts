@@ -10,9 +10,19 @@ import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ApiExceptionFilter } from '../common/filter/api-exception.filter';
 import { ApiResponseInterceptor } from '../common/interceptor/api.interceptor';
 import { AuthModule } from './auth.module';
+import { MinioModule } from './minio.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(TypeORMConfig), ConfigModule.forRoot({ isGlobal: true }), UserModule, AuthModule, BroadcastModule, ChatModule, LoggerModule],
+  imports: [
+    TypeOrmModule.forRoot(TypeORMConfig),
+    ConfigModule.forRoot({ isGlobal: true }),
+    UserModule,
+    AuthModule,
+    BroadcastModule,
+    ChatModule,
+    LoggerModule,
+    MinioModule,
+  ],
   controllers: [],
   providers: [
     {

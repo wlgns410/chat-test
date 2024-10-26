@@ -11,14 +11,14 @@ export class BroadcastLog {
   @JoinColumn({ name: 'broadcast_id' })
   broadcast: BroadcastEntity;
 
-  @Column({ name: 'broadcast_id' })
+  @Column()
   broadcastId: number;
 
   @ManyToOne(() => UserEntity, { nullable: true, onDelete: 'SET NULL' })
-  @JoinColumn()
+  @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
-  @Column({ name: 'user_id' })
+  @Column()
   userId: number;
 
   @Column({ length: 255 })
@@ -33,9 +33,9 @@ export class BroadcastLog {
   @Column({ type: 'timestamptz', nullable: true })
   endTime: Date;
 
-  @Column({ type: 'int' })
-  viewerCount: number;
+  @Column({ type: 'int', default: 0 })
+  allViewerCount: number;
 
   @CreateDateColumn({ type: 'timestamptz' })
-  logCreatedAt: Date; // 로그 생성 시간
+  createdAt: Date; // 로그 생성 시간
 }
