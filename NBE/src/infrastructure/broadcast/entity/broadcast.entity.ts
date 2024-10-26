@@ -1,5 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
 import { UserEntity } from '../../user/entity/user.entity';
+
+export enum StatusEnum {
+  SCHEDULED = 'scheduled',
+  LIVE = 'live',
+  OFF_AIR = 'off_air',
+}
 
 @Entity()
 export class BroadcastEntity {
@@ -21,10 +27,10 @@ export class BroadcastEntity {
 
   @Column({
     type: 'enum',
-    enum: ['scheduled', 'live', 'off_air'],
-    default: 'off_air',
+    enum: StatusEnum,
+    default: StatusEnum.OFF_AIR,
   })
-  status: string;
+  status: StatusEnum;
 
   @Column({ type: 'bigint', default: 1 })
   viewerCount: number; // 방송하는 사람 있으니 기본값 1
