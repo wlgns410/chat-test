@@ -1,19 +1,3 @@
-// import { Nullable } from '../../../common/type/native';
-// import { BroadcastDomain } from '../../../domain/broadcast/model/broadcast.domain';
-
-// export const BroadcastRepositorySymbol = Symbol.for('BroadcastRepository');
-
-// export interface BroadcastRepository {
-//   // 방송 생성
-//   createBroadcast(broadcastDomain: BroadcastDomain): Promise<BroadcastDomain>;
-//   // 특정 방송 조회
-//   getBroadcastById(broadcastId: number): Promise<Nullable<BroadcastDomain>>;
-//   // 방송 업데이트
-//   updateBroadcast(broadcastDomain: BroadcastDomain): Promise<BroadcastDomain>;
-//   // 방송 삭제
-//   deleteBroadcast(broadcastId: number): Promise<void>;
-// }
-
 import { Nullable } from '../../../common/type/native';
 import { BroadcastDomain } from '../../../domain/broadcast/model/broadcast.domain';
 

@@ -1,5 +1,3 @@
-// src/domain/broadcast/service/broadcast.scheduler.ts
-
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { BroadcastService } from '../../../../domain/broadcast/service/broadcast.service';

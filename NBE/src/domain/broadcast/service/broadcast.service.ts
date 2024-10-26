@@ -1,5 +1,3 @@
-// src/domain/broadcast/service/broadcast.service.ts
-
 import { Injectable, Inject } from '@nestjs/common';
 import { BroadcastRepository, BroadcastRepositorySymbol } from '../interface/broadcast.repository';
 import { BroadcastDomain } from '../model/broadcast.domain';
