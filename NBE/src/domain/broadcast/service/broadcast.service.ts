@@ -2,12 +2,14 @@ import { Injectable, Inject } from '@nestjs/common';
 import { BroadcastRepository, BroadcastRepositorySymbol } from '../interface/broadcast.repository';
 import { BroadcastDomain } from '../model/broadcast.domain';
 import { Nullable } from '../../../common/type/native';
+import { StreamSubtitleService } from './stream.service';
 
 @Injectable()
 export class BroadcastService {
   constructor(
     @Inject(BroadcastRepositorySymbol)
     private readonly broadcastRepository: BroadcastRepository,
+    private readonly streamSubtitleService: StreamSubtitleService,
   ) {}
 
   // 방송 생성
@@ -58,5 +60,23 @@ export class BroadcastService {
   // 방송중인 목록 조회
   async getLiveBroadcasts(): Promise<BroadcastDomain[]> {
     return this.broadcastRepository.getLiveBroadcasts();
+  }
+
+  // VOD 영상 등록 및 자막 생성 메서드
+  async registerVOD(broadcastDomain: BroadcastDomain, videoBuffer: Buffer): Promise<BroadcastDomain> {
+    // 1. VOD 상태로 방송 데이터 업데이트
+    const updatedBroadcast = await this.broadcastRepository.updateBroadcast(broadcastDomain);
+
+    // 2. MinIO에 VOD 영상을 저장하고 URL 반환
+    const videoUrl = await this.streamSubtitleService.saveStreamToMinio(videoBuffer);
+
+    // 3. 저장된 영상 URL로부터 오디오 청크 추출 및 자막 생성
+    this.streamSubtitleService.createSubtitlesFromStream(videoUrl).subscribe({
+      next: subtitle => console.log('Generated subtitle:', subtitle.toString()),
+      error: err => console.error('Error generating subtitle:', err),
+      complete: () => console.log('Subtitle generation complete.'),
+    });
+
+    return updatedBroadcast;
   }
 }
