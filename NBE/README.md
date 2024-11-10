@@ -23,3 +23,9 @@
 프로젝트의 데이터베이스 설계는 다음과 같습니다.
 
 ![entity](asset/entity.png)
+
+## Docs
+
+프로젝트와 관련된 문서들입니다.
+
+[index 설정](docs/db-index.md)
