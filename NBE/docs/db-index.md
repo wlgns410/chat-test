@@ -97,7 +97,7 @@ unique = true인 컬럼은 자동적으로 인덱스를 설정한다.
 
 ### 예약된 방송 목록 조회
 
-- 예약된 방송을 조회하는 경우를 테스트
+- 실시간 방송을 조회하는 경우를 테스트
 
 **더미 생성**
 
@@ -223,3 +223,132 @@ Execution Time: 14.016 ms
 
 복합 인덱스를 설정한 후 성능이 상당히 개선되었습니다.  
 실행 시간과 비용이 크게 줄어들었고, 데이터베이스가 인덱스를 통해 조건을 바로 만족하는 데이터를 가져왔기 때문에 쿼리 성능이 최적화된 것을 확인할 수 있었습니다.
+(또한 `예약된 방송 조회` API도 해당 인덱스를 타게되어 두개의 API가 성능 향상되는 결과를 불러 일으켰지만, 같은 내용이라 작성X)
+
+### 한 방송의 모든 채팅 조회
+
+**더미 생성**
+
+```sql
+-- Insert 1,000,000 dummy chats
+INSERT INTO chat_entity (user_id, broadcast_id, message, created_at, updated_at)
+SELECT
+    (i % 1000) + 1, -- userId ranging from 1 to 1000
+    (i % 100) + 1, -- broadcastId ranging from 1 to 100
+    'This is a dummy message for chat number ' || i, -- message content
+    now() - (i % 100) * interval '1 minute', -- created_at with variation
+    now() -- updated_at as current time
+FROM generate_series(1, 1000000) AS i;
+
+```
+
+**인덱스 생성 전**
+
+```sql
+const [chatEntities, totalCount] = await this.chatRepository
+      .createQueryBuilder('chat')
+      .where('chat.broadcastId = :broadcastId', { broadcastId })
+      .orderBy('chat.createdAt', 'ASC')
+      .skip(pagination.getSkip())
+      .take(pagination.getTake())
+      .getManyAndCount();
+```
+
+**결과**
+
+```
+Gather Merge  (cost=19800.32..20801.86 rows=8584 width=74) (actual time=146.485..149.196 rows=10000 loops=1)
+  Workers Planned: 2
+  Workers Launched: 2
+  ->  Sort  (cost=18800.30..18811.03 rows=4292 width=74) (actual time=137.153..137.274 rows=3333 loops=3)
+        Sort Key: created_at
+        Sort Method: quicksort  Memory: 586kB
+        Worker 0:  Sort Method: quicksort  Memory: 555kB
+        Worker 1:  Sort Method: quicksort  Memory: 555kB
+        ->  Parallel Seq Scan on chat_entity  (cost=0.00..18541.33 rows=4292 width=74) (actual time=0.206..133.864 rows=3333 loops=3)
+              Filter: (broadcast_id = 100)
+              Rows Removed by Filter: 330000
+Planning Time: 1.322 ms
+Execution Time: 149.747 ms
+```
+
+**인덱스 생성**
+
+```
+CREATE INDEX idx_chat_broadcast_created_at ON chat_entity (broadcast_id, created_at);
+```
+
+**결과**
+
+```
+Sort  (cost=13577.06..13600.48 rows=9367 width=74) (actual time=234.031..234.386 rows=10000 loops=1)
+  Sort Key: created_at
+  Sort Method: quicksort  Memory: 1791kB
+  ->  Bitmap Heap Scan on chat_entity  (cost=109.02..12959.15 rows=9367 width=74) (actual time=6.352..231.043 rows=10000 loops=1)
+        Recheck Cond: (broadcast_id = 99)
+        Heap Blocks: exact=10000
+        ->  Bitmap Index Scan on idx_chat_broadcast_created_at  (cost=0.00..106.68 rows=9367 width=0) (actual time=4.142..4.142 rows=10000 loops=1)
+              Index Cond: (broadcast_id = 99)
+Planning Time: 17.712 ms
+Execution Time: 235.636 ms
+```
+
+**비교**
+
+- 인덱스 생성 전: Parallel Seq Scan이 사용되어 테이블의 데이터를 병렬로 스캔하고 broadcast_id를 필터링한 후 created_at으로 정렬했습니다. 그래서 병렬 처리를 통해 성능이 개선되었지만, 여전히 테이블 전체 스캔에 가까운 작업을 수행한 결과를 보였고 149.747 ms의 수행시간이 소요되었습니다.
+- 인덱스 생성 후: Bitmap Index Scan과 Bitmap Heap Scan이 사용되었습니다. 인덱스를 사용하여 broadcast_id를 필터링한 후, 필요한 블록을 정확히 가져왔습니다. 하지만 인덱스를 사용했지만 정렬(Sort) 작업이 여전히 존재하며, 메모리 사용량이 증가했고 235.636 ms
+  의 수행시간이 소요되었습니다.
+- 결론 : Bitmap Index Scan이 broadcast_id를 기반으로 데이터 필터링을 수행하여 정렬 전 데이터 수를 줄이는 데는 도움이 되었지만, 정렬 자체가 여전히 추가적인 비용을 초래했습니다.
+
+**인덱스 수정**
+
+```
+CLUSTER chat_entity USING idx_chat_broadcast_created_at;
+```
+
+chat_entity 테이블을 broadcast_id, created_at으로 클러스터링하면, 정렬된 상태를 유지하도록 수정합니다.
+
+**쿼리 explain 조회**
+
+```
+EXPLAIN ANALYZE
+SELECT *
+FROM chat_entity
+WHERE broadcast_id = 99
+ORDER BY created_at ASC;
+```
+
+**결과**
+
+```
+Sort  (cost=13576.50..13599.92 rows=9367 width=74) (actual time=10.844..11.801 rows=10000 loops=1)
+  Sort Key: created_at
+  Sort Method: quicksort  Memory: 1791kB
+  ->  Bitmap Heap Scan on chat_entity  (cost=109.02..12958.59 rows=9367 width=74) (actual time=1.637..8.591 rows=10000 loops=1)
+        Recheck Cond: (broadcast_id = 99)
+        Heap Blocks: exact=134
+        ->  Bitmap Index Scan on idx_chat_broadcast_created_at  (cost=0.00..106.68 rows=9367 width=0) (actual time=1.546..1.547 rows=10000 loops=1)
+              Index Cond: (broadcast_id = 99)
+Planning Time: 0.391 ms
+Execution Time: 12.539 ms
+```
+
+CLUSTER 명령어를 사용한 후 EXPLAIN ANALYZE의 결과를 보면 성능이 눈에 띄게 향상된 것을 확인할 수 있었습니다.
+
+- 기존 : Bitmap Heap Scan과 정렬 작업이 있었고, 정렬의 비용이 컸습니다(Execution Time: 235.636 ms)
+- 클러스터링 인덱스 추가 : 여전히 Bitmap Heap Scan을 사용하고 ORDER BY created_at 정렬이 있지만, 정렬 작업의 비용이 많이 줄었고, 데이터가 인덱스 순서대로 정렬되어 있어 ORDER BY가 효율적으로 수행되어 Execution Time이 크게 감소했습니다.(Execution Time: 12.539 ms
+  )
+
+**결론**
+
+CLUSTER 명령어로 테이블을 인덱스 순서대로 정렬한 후 쿼리 성능이 대폭 개선되었습니다. 이는 created_at 기준의 정렬 비용이 크게 줄었기 때문입니다.  
+Execution Time이 235.636 ms에서 12.539 ms로 감소한 것은 ORDER BY 작업이 효율적으로 수행되었다는 것을 확인할 수 있습니다.  
+인덱스 순서 정렬(Ordering)에 대한 인덱스는 CLUSTER를 사용해 테이블을 인덱스 순서대로 정렬하는 것으로 처리하면, 특정 쿼리에 대해 큰 성능 향상을 가져올 수 있다는 것을 알게 되었습니다.
+
+**유의점**
+
+```
+CLUSTERING이란 테이블의 데이터를 지정된 인덱스 순서대로 물리적으로 재정렬하는 명령을 말합니다.
+이것을 주기적으로 수행해야 하는 이유는 테이블이 자주 변경(삽입, 업데이트, 삭제)되면 물리적 정렬이 점차 깨지기 때문입니다.
+이렇게 되면 CLUSTER의 정렬 효과가 점차 사라지고, 초기 성능 향상 효과가 줄어들기 때문에 클러스터링 인덱스로 인한 정렬된 순서 유지를 위해서는 주기적으로 인덱스 순서대로 저장되어 있게 작업을 해줘야합니다.
+```
