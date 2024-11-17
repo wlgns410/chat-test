@@ -3,6 +3,7 @@ import { BroadcastRepository, BroadcastRepositorySymbol } from '../interface/bro
 import { BroadcastDomain } from '../model/broadcast.domain';
 import { Nullable } from '../../../common/type/native';
 import { StreamSubtitleService } from './stream.service';
+import { ViewerService } from '../../redis/service/redis.service';
 
 @Injectable()
 export class BroadcastService {
@@ -10,6 +11,7 @@ export class BroadcastService {
     @Inject(BroadcastRepositorySymbol)
     private readonly broadcastRepository: BroadcastRepository,
     private readonly streamSubtitleService: StreamSubtitleService,
+    private readonly viewerService: ViewerService,
   ) {}
 
   // 방송 생성
