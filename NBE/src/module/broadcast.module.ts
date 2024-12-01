@@ -13,15 +13,20 @@ import { BroadcastVideoRepositoryImpl } from '../infrastructure/broadcast/reposi
 import { BroadcastGateway } from '../infrastructure/socket/broadcast/broadcast-socket';
 import { BroadcastScheduler } from '../interface/presentation/broadcast/scheduler/broadcast.scheduler';
 import { StreamSubtitleModule } from './stream.module';
+import { ViewerService } from '../domain/redis/service/redis.service';
+import { ViewerModule } from './viewer.module';
+import { RedisViewerRepository } from '../infrastructure/redis/redis.repository.impl';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BroadcastEntity, BroadcastVideoEntity]), StreamSubtitleModule],
+  imports: [TypeOrmModule.forFeature([BroadcastEntity, BroadcastVideoEntity]), StreamSubtitleModule, ViewerModule],
   controllers: [BroadcastController, BroadcastVideoController],
   providers: [
     BroadcastGateway,
     BroadcastService,
     BroadcastVideoService,
     BroadcastScheduler,
+    ViewerService, // ViewerService 등록
+    RedisViewerRepository,
     {
       provide: BroadcastRepositorySymbol,
       useClass: BroadcastRepositoryImpl,
