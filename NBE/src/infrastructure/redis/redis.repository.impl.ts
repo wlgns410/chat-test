@@ -7,15 +7,15 @@ export class RedisViewerRepository {
     @Inject('REDIS_CLIENT') private readonly redisClientConnector: RedisClientType<any, any>, // Redis 클라이언트 타입
   ) {}
 
-  async incrementViewerCount(broadcastId: string): Promise<void> {
+  async incrementViewerCount(broadcastId: number): Promise<void> {
     await this.redisClientConnector.incr(`viewer_count:${broadcastId}`);
   }
 
-  async decrementViewerCount(broadcastId: string): Promise<void> {
+  async decrementViewerCount(broadcastId: number): Promise<void> {
     await this.redisClientConnector.decr(`viewer_count:${broadcastId}`);
   }
 
-  async getViewerCount(broadcastId: string): Promise<number> {
+  async getViewerCount(broadcastId: number): Promise<number> {
     const count = await this.redisClientConnector.get(`viewer_count:${broadcastId}`);
     return parseInt(count || '0', 10);
   }
