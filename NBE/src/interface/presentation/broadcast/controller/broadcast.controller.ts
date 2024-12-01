@@ -4,8 +4,8 @@ import { Controller, Get, Post, Put, Delete, Param, Body, HttpStatus, HttpExcept
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '../../../../common/guard/auth.guard';
 
-@ApiTags('chats')
-@Controller('broadcast')
+@ApiTags('broadcasts')
+@Controller('broadcasts')
 export class BroadcastController {
   constructor(private readonly broadcastService: BroadcastService) {}
 

@@ -1,28 +1,19 @@
-import { Controller, Get, Patch, Param } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ViewerService } from '../../../../domain/redis/service/redis.service';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@Controller('viewer')
+@ApiTags('viewers')
+@Controller('viewers')
 export class ViewerController {
   constructor(private readonly viewerService: ViewerService) {}
 
-  // 현재 시청자 수 가져오기
+  // 방송 생성
+  @ApiOperation({ summary: '시청자 수 조회' })
+  @ApiResponse({ status: 200, description: '시청자 수 조회' })
+  // 현재 시청자 수 조회
   @Get(':broadcastId')
   async getViewerCount(@Param('broadcastId') broadcastId: number): Promise<{ viewerCount: number }> {
     const viewerCount = await this.viewerService.getViewerCount(broadcastId);
     return { viewerCount };
-  }
-
-  // 시청자 수 증가
-  @Patch(':broadcastId/increment')
-  async incrementViewerCount(@Param('broadcastId') broadcastId: number): Promise<{ message: string }> {
-    await this.viewerService.incrementViewerCount(broadcastId);
-    return { message: `Viewer count for broadcast ${broadcastId} incremented.` };
-  }
-
-  // 시청자 수 감소
-  @Patch(':broadcastId/decrement')
-  async decrementViewerCount(@Param('broadcastId') broadcastId: number): Promise<{ message: string }> {
-    await this.viewerService.decrementViewerCount(broadcastId);
-    return { message: `Viewer count for broadcast ${broadcastId} decremented.` };
   }
 }
