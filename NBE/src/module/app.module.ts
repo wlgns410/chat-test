@@ -11,6 +11,7 @@ import { ApiExceptionFilter } from '../common/filter/api-exception.filter';
 import { ApiResponseInterceptor } from '../common/interceptor/api.interceptor';
 import { AuthModule } from './auth.module';
 import { MinioModule } from './minio.module';
+import { RedisModule } from './redis.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { MinioModule } from './minio.module';
     ChatModule,
     LoggerModule,
     MinioModule,
+    RedisModule,
   ],
   controllers: [],
   providers: [

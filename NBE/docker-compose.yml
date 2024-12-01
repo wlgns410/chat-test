@@ -23,6 +23,16 @@ services:
     command: server /data --console-address ":9001" # /data 경로를 저장소 디렉토리로 설정하고, 관리 콘솔을 9001 포트에서 염
     volumes:
       - minio_data:/data
+
+  redis:
+    image: redis:6.2
+    restart: always
+    ports:
+      - '6379:6379' # Redis 기본 포트, 스냅샷 비활성화
+    command: redis-server --save "" --appendonly no --loglevel warning
+    volumes:
+      - redis_data:/data
 volumes:
   postgres:
   minio_data:
+  redis_data:
